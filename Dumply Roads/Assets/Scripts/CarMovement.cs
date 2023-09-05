@@ -27,34 +27,30 @@ public class CarMovement : MonoBehaviour
     }
     private void Update()
     {
+        
+        
         if (GameStarted)
         {
-            int x = 0;
-
-            if (x == 0)
-            {
-                x += 1;
-                transform.position = Vector3.MoveTowards(transform.position, transform.forward, moveSpeed * Time.deltaTime);
-            }
-
             if (!isMoving && !isTurning)
             {
-                
-                
-                StartCoroutine(MoveAndRotate());
-            }
-        }
-        if(isDead)
-        {
-            int x = 0;
 
-            if (x == 0)
-            {
-                x += 1;
-                Debug.Log("You lost");
+                StartCoroutine(MoveAndRotate());
+
             }
-            
+
+            if (isDead)
+            {
+                int x = 0;
+
+                if (x == 0)
+                {
+                    x += 1;
+                    Debug.Log("You lost");
+                }
+
+            }
         }
+       
     }
 
     private IEnumerator MoveAndRotate()
@@ -199,10 +195,7 @@ public class CarMovement : MonoBehaviour
                 }
             }
         }
-        if (!Physics.Raycast(transform.position, Vector3.down, out hit, deadEndRange, Roads)) 
-        {
-            isDead = true;
-        }
+        
         
     }
 

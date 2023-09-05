@@ -31,60 +31,63 @@ public class _Grid : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (CarMovement.GameStarted == false)
         {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+            if (Input.touchCount > 0)
             {
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
+                Touch touch = Input.GetTouch(0);
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, touchLayerMask))
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
                 {
-                    if (hit.collider.gameObject == gameObject)
+                    Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, touchLayerMask))
                     {
-                        StructureData currentStructureData = structureManager.GetCurrentStructureData();
-
-                        if (currentStructureData != null)
+                        if (hit.collider.gameObject == gameObject)
                         {
-                            int buildingLimit = currentStructureData.buildingLimit;
+                            StructureData currentStructureData = structureManager.GetCurrentStructureData();
 
-                            if (distroyMode)
+                            if (currentStructureData != null)
                             {
-                                
-                                DestroyCurrentStructure(destroyedStructureData, destroyedStructureIndex);
+                                int buildingLimit = currentStructureData.buildingLimit;
 
-                            }
-                            else if (CanBuildStructure(currentStructureData.Id, buildingLimit))
-                            {
-                                spriteRenderer.color = hitColor;
-
-                                if (currentStructureInstance == null)
+                                if (distroyMode)
                                 {
-                                    currentStructurePrefab = currentStructureData.structurePrefab;
-                                    currentStructureInstance = SpawnStructure(transform.position);
+
+                                    DestroyCurrentStructure(destroyedStructureData, destroyedStructureIndex);
+
                                 }
-                                else if (touch.phase != TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                                else if (CanBuildStructure(currentStructureData.Id, buildingLimit))
                                 {
-                                    RotateCurrentStructure();
+                                    spriteRenderer.color = hitColor;
+
+                                    if (currentStructureInstance == null)
+                                    {
+                                        currentStructurePrefab = currentStructureData.structurePrefab;
+                                        currentStructureInstance = SpawnStructure(transform.position);
+                                    }
+                                    else if (touch.phase != TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
+                                    {
+                                        RotateCurrentStructure();
+                                    }
+                                }
+                                else
+                                {
+                                    Debug.Log("Building limit reached for this structure type.");
                                 }
                             }
                             else
                             {
-                                Debug.Log("Building limit reached for this structure type.");
+                                Debug.Log("No structure selected.");
                             }
-                        }
-                        else
-                        {
-                            Debug.Log("No structure selected.");
                         }
                     }
                 }
-            }
-            else if (touch.phase == TouchPhase.Ended)
-            {
-                spriteRenderer.color = originalColor;
+                else if (touch.phase == TouchPhase.Ended)
+                {
+                    spriteRenderer.color = originalColor;
+                }
             }
         }
     }
