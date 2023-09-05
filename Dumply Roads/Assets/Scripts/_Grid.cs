@@ -65,7 +65,7 @@ public class _Grid : MonoBehaviour
                                     currentStructurePrefab = currentStructureData.structurePrefab;
                                     currentStructureInstance = SpawnStructure(transform.position);
                                 }
-                                else
+                                else if (touch.phase != TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                                 {
                                     RotateCurrentStructure();
                                 }
@@ -131,19 +131,18 @@ public class _Grid : MonoBehaviour
             currentStructureInstance.transform.rotation = newRotation;
         }
     }
-
     private GameObject SpawnStructure(Vector3 spawnPosition)
     {
         if (currentStructurePrefab != null)
         {
             GameObject newStructure = Instantiate(currentStructurePrefab, spawnPosition, Quaternion.identity);
             int currentStructureId = structureManager.GetCurrentStructureData().Id;
-            BuildingManager.Instance.IncrementStructureCount(currentStructureId);
-
             
+
+
             destroyedStructureData = structureManager.GetCurrentStructureData();
             destroyedStructureIndex = StructureManager.currentStructureIndex;
-            
+
 
             // Update the currentStructureId after building the structure
             this.currentStructureId = currentStructureId;
@@ -151,9 +150,20 @@ public class _Grid : MonoBehaviour
             // Update the NumText after building the structure
             UIManager.Instance.UpdateNumText(StructureManager.currentStructureIndex, currentStructureId, structureManager.GetCurrentStructureData().buildingLimit);
 
+            GameObject childObject = newStructure.transform.GetChild(0).gameObject;
+            ID idScript = childObject.AddComponent<ID>();
+            idScript.structureID = currentStructureId;
+            
+            
+            BuildingManager.Instance.IncrementStructureCount(currentStructureId);
+
             return newStructure;
         }
         return null;
     }
 
 }
+
+
+
+

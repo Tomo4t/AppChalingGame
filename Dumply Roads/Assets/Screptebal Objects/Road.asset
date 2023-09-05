@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 178a13e5b5d7c164e8555f6daca81264, type: 3}
-  m_Name: White
+  m_Name: Road
   m_EditorClassIdentifier: 
-  structurePrefab: {fileID: 40976092926627571, guid: e2cb34080f9b80a428bb1830f77b63ba, type: 3}
-  structureName: White Cube
+  structurePrefab: {fileID: 40976092926627571, guid: 547532ef36ed0044c9850ce89773d002, type: 3}
+  structureName: Road
   previewImage: {fileID: 0}
-  Id: 5
+  Id: 0
   buildingLimit: 0

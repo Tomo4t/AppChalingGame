@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject buttonPrefab;
     public Transform buttonParent;
-    public Button distroyModeButten;
+    public Button distroyModeButten, startButten;
     public static UIManager Instance;
 
     private void Awake()
@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
         
         distroyModeButten.GetComponent<Button>().onClick.AddListener(() => dystroymode());
         AssinButtens();
+        startButten.GetComponent<Button>().onClick.AddListener(() => startGame());
+
     }
 
 
@@ -87,13 +89,19 @@ public class UIManager : MonoBehaviour
             NumText.text = "You Have: " + structureCount.ToString();
         }
     }
-
+    private void startGame()
+    {
+        CarMovement.GameStarted = true;
+    }
 
     private void dystroymode()
     {
+        if (CarMovement.GameStarted == false)
+        {
+            _Grid.distroyMode = !_Grid.distroyMode;
+            Debug.Log("is " + _Grid.distroyMode);
 
-      _Grid.distroyMode = !_Grid.distroyMode;
-        Debug.Log("is " + _Grid.distroyMode);
+        }
 
     }
 }

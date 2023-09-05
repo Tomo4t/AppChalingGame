@@ -15,5 +15,5 @@ MonoBehaviour:
   structurePrefab: {fileID: 40976092926627571, guid: 0519b657845bd1d4f9f25a600663d817, type: 3}
   structureName: Black Cube
   previewImage: {fileID: 0}
-  Id: 0
+  Id: 6
   buildingLimit: 5

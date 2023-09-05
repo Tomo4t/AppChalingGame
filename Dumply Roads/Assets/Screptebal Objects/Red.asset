@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structurePrefab: {fileID: 40976092926627571, guid: cb85f27ebe0d72c49a39ee641506e100, type: 3}
   structureName: Red Cube
-  previewImage: {fileID: 21300000, guid: b4ffdb006d15d81438993faee0dc1ad9, type: 3}
+  previewImage: {fileID: 0}
   Id: 3
   buildingLimit: 5
