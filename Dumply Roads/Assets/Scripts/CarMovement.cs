@@ -16,14 +16,15 @@ public class CarMovement : MonoBehaviour
     public static bool GameStarted;
     private bool isDead = false;
     private Rigidbody rb;
-    private BoxCollider col;
+    private MeshCollider col;
 
+    private int x = 0;
     private Vector3 lastPosition; // Store the car's last position
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<BoxCollider>();
+        col = GetComponent<MeshCollider>();
     }
     private void Update()
     {
@@ -31,7 +32,7 @@ public class CarMovement : MonoBehaviour
         
         if (GameStarted)
         {
-            if (!isMoving && !isTurning)
+            if (!isMoving && !isTurning && !isDead)
             {
 
                 StartCoroutine(MoveAndRotate());
@@ -40,11 +41,9 @@ public class CarMovement : MonoBehaviour
 
             if (isDead)
             {
-                int x = 0;
-
                 if (x == 0)
                 {
-                    x += 1;
+                    x = 1;
                     Debug.Log("You lost");
                 }
 
@@ -198,12 +197,20 @@ public class CarMovement : MonoBehaviour
         
         
     }
-
+   
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Bordaer"))
         {
             isDead = true;
+        }
+        if (other.gameObject.CompareTag("Car"))
+        {
+            
+            col.isTrigger = false;
+           
+            isDead = true;
+            
         }
     }
 

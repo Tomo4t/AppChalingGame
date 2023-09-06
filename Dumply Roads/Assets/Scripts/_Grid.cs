@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class _Grid : MonoBehaviour
 {
     [SerializeField] private LayerMask touchLayerMask;
     [SerializeField] private Color hitColor;
+
+    public bool canBeEdited = true;
 
     private GameObject currentStructurePrefab;
     private int currentStructureId = -1;
@@ -17,7 +20,7 @@ public class _Grid : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private StructureManager structureManager;
 
-
+    
 
     public static bool distroyMode;
     private void Start()
@@ -26,12 +29,13 @@ public class _Grid : MonoBehaviour
         originalColor = spriteRenderer.color;
 
         // Initialize the reference to the StructureManager
+        
         structureManager = StructureManager.Instance;
     }
 
     void Update()
     {
-        if (CarMovement.GameStarted == false)
+        if (CarMovement.GameStarted == false && canBeEdited)
         {
             if (Input.touchCount > 0)
             {
@@ -111,12 +115,12 @@ public class _Grid : MonoBehaviour
             BuildingManager.Instance.DecrementStructureCount(currentStructureId);
             currentStructureId = -1;
 
-            
+
             UIManager.Instance.UpdateNumText(structureIndex, data.Id, data.buildingLimit);
 
-            
+
             destroyedStructureIndex = -1;
-            
+
         }
     }
 
@@ -134,13 +138,14 @@ public class _Grid : MonoBehaviour
             currentStructureInstance.transform.rotation = newRotation;
         }
     }
+   
     private GameObject SpawnStructure(Vector3 spawnPosition)
     {
         if (currentStructurePrefab != null)
         {
             GameObject newStructure = Instantiate(currentStructurePrefab, spawnPosition, Quaternion.identity);
             int currentStructureId = structureManager.GetCurrentStructureData().Id;
-            
+
 
 
             destroyedStructureData = structureManager.GetCurrentStructureData();
@@ -156,17 +161,18 @@ public class _Grid : MonoBehaviour
             GameObject childObject = newStructure.transform.GetChild(0).gameObject;
             ID idScript = childObject.AddComponent<ID>();
             idScript.structureID = currentStructureId;
-            
-            
+
+
             BuildingManager.Instance.IncrementStructureCount(currentStructureId);
 
             return newStructure;
         }
         return null;
+
+
+
     }
 
+
 }
-
-
-
 
