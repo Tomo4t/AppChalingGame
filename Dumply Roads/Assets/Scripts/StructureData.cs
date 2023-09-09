@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+
 
 [CreateAssetMenu(fileName = "New Structure", menuName = "Structure Data")]
 public class StructureData : ScriptableObject

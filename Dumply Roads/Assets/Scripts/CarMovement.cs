@@ -1,34 +1,35 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+
 
 public class CarMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float turnSpeed = 90f;
     public float deadEndRange = 1f;
-    public LayerMask IgnorlayerMask,Roads;
+    public LayerMask IgnorlayerMask;
+    public float WaiteBeforeMoving = 1f;
 
     private bool isMoving = false;
     private bool isTurning = false;
 
     public static bool GameStarted;
     private bool isDead = false;
+    
     private Rigidbody rb;
     private MeshCollider col;
 
     private int x = 0;
-    private Vector3 lastPosition; // Store the car's last position
+    private Vector3 lastPosition; 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<MeshCollider>();
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        
         
         if (GameStarted)
         {
@@ -39,7 +40,8 @@ public class CarMovement : MonoBehaviour
 
             }
 
-            if (isDead)
+
+                if (isDead)
             {
                 if (x == 0)
                 {
@@ -58,7 +60,7 @@ public class CarMovement : MonoBehaviour
         RaycastHit hit;
         
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, deadEndRange, ~IgnorlayerMask))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, ~IgnorlayerMask))
         {
             Debug.DrawRay(transform.position, Vector3.down * deadEndRange, Color.green);
 
@@ -69,7 +71,7 @@ public class CarMovement : MonoBehaviour
                 int structureID = idScript.structureID;
 
              // Adjust car behavior based on structure ID
-               if (structureID == 1)
+               if (structureID == 1 || structureID == 2)
                      {
                         // Find all child objects of the road
                         Transform[] children = hit.collider.GetComponentsInChildren<Transform>();
@@ -97,7 +99,7 @@ public class CarMovement : MonoBehaviour
                             }
                         }
 
-                    // ...
+                    
 
                     if (farthestChild != null)
                     {
@@ -177,38 +179,70 @@ public class CarMovement : MonoBehaviour
                         }
                     }
 
-                    // ...
+                    
 
                 }
                 else if (structureID == 0)
                 {
-                    Vector3 targetPosition = transform.position + transform.forward;
-                    while (transform.position != targetPosition)
+                    
+                    if (isMoving == false)
                     {
+                        
+                        Vector3 targetPosition = transform.position + transform.forward;
+                        lastPosition = targetPosition;
+                        
+                        while (transform.position != targetPosition)
+                        {
+                            isMoving = true;
+                            if (isDead)
+                            {
+                                targetPosition = transform.position;
+                            }
+                            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                            yield return null;
+                        }
                         isMoving = true;
-                        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-                        yield return null;
                     }
-
-                    isMoving = false;
+                    if (lastPosition == transform.position)
+                    {
+                        yield return new WaitForSeconds(WaiteBeforeMoving);
+                        isMoving = false;
+                    }
+                   
                 }
             }
+
+
+
         }
-        
-        
+        else
+        {
+          
+           isDead = true;
+            
+        }
+
+
     }
    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Bordaer"))
         {
+            
+            col.isTrigger = false;
+            rb.velocity = other.transform.position - transform.forward;
             isDead = true;
+            
+           
+
+
         }
         if (other.gameObject.CompareTag("Car"))
         {
             
             col.isTrigger = false;
-           
+            rb.velocity = other.transform.position - transform.forward;
             isDead = true;
             
         }

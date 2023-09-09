@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
+
 using UnityEngine;
 
 public class _Grid : MonoBehaviour
@@ -25,6 +23,15 @@ public class _Grid : MonoBehaviour
     public static bool distroyMode;
     private void Start()
     {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, 1))
+        {
+            if (hit.collider.CompareTag("Bordaer"))
+            {
+                canBeEdited = false;
+            }
+        }
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
 
@@ -73,12 +80,17 @@ public class _Grid : MonoBehaviour
                                     }
                                     else if (touch.phase != TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                                     {
+
                                         RotateCurrentStructure();
+
                                     }
+
                                 }
-                                else
+                                else if (currentStructureInstance != null && (touch.phase != TouchPhase.Moved || touch.phase == TouchPhase.Stationary))
                                 {
-                                    Debug.Log("Building limit reached for this structure type.");
+                                    
+                                       RotateCurrentStructure();
+                                    
                                 }
                             }
                             else
@@ -124,9 +136,6 @@ public class _Grid : MonoBehaviour
         }
     }
 
-
-
-
     private void RotateCurrentStructure()
     {
         if (currentStructureInstance != null)
@@ -152,11 +161,10 @@ public class _Grid : MonoBehaviour
             destroyedStructureIndex = StructureManager.currentStructureIndex;
 
 
-            // Update the currentStructureId after building the structure
-            this.currentStructureId = currentStructureId;
+           
+           
 
-            // Update the NumText after building the structure
-            UIManager.Instance.UpdateNumText(StructureManager.currentStructureIndex, currentStructureId, structureManager.GetCurrentStructureData().buildingLimit);
+            
 
             GameObject childObject = newStructure.transform.GetChild(0).gameObject;
             ID idScript = childObject.AddComponent<ID>();
@@ -164,6 +172,9 @@ public class _Grid : MonoBehaviour
 
 
             BuildingManager.Instance.IncrementStructureCount(currentStructureId);
+            
+            this.currentStructureId = currentStructureId;
+            UIManager.Instance.UpdateNumText(StructureManager.currentStructureIndex, currentStructureId, structureManager.GetCurrentStructureData().buildingLimit);
 
             return newStructure;
         }
