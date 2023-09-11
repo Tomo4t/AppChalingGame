@@ -11,6 +11,8 @@ public class CarMovement : MonoBehaviour
     public LayerMask IgnorlayerMask;
     public float WaiteBeforeMoving = 1f;
 
+    public bool isRightFavored;
+
     private bool isMoving = false;
     private bool isTurning = false;
 
@@ -25,6 +27,7 @@ public class CarMovement : MonoBehaviour
 
     private void Start()
     {
+        
         rb = GetComponent<Rigidbody>();
         col = GetComponent<MeshCollider>();
     }
@@ -71,7 +74,7 @@ public class CarMovement : MonoBehaviour
                 int structureID = idScript.structureID;
 
              // Adjust car behavior based on structure ID
-               if (structureID == 1 || structureID == 2)
+               if (structureID == 1 )
                      {
                         // Find all child objects of the road
                         Transform[] children = hit.collider.GetComponentsInChildren<Transform>();
@@ -110,9 +113,7 @@ public class CarMovement : MonoBehaviour
                         Quaternion targetRotation = Quaternion.LookRotation(directionToFarthestChild);
                         targetRotation.eulerAngles = new Vector3(0f, Mathf.Round(targetRotation.eulerAngles.y / 90) * 90, 0f);
 
-                        // Calculate the angle between the current rotation and the target rotation
-                        float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
-
+                     
                         // Find the next nearest child to turn towards
                         Transform nextNearestChild = null;
                         float minDistance = float.MaxValue;
@@ -182,6 +183,118 @@ public class CarMovement : MonoBehaviour
                     
 
                 }
+
+                else if (structureID == 2)
+                {
+                    Transform[] children = hit.collider.GetComponentsInChildren<Transform>();
+                    List<Transform> roadChildren = new List<Transform>();
+
+                    foreach (Transform child in children)
+                    {
+                        if (child != hit.collider.transform)
+                        {
+                            roadChildren.Add(child);
+                        }
+                    }
+
+                    Transform entrance = null;
+                    Transform rightWay = null;
+                    Transform leftWay = null;
+
+                    entrance = roadChildren[0];
+                    rightWay = roadChildren[1];
+                    leftWay = roadChildren[2];
+
+                    Transform TargetChiled = isRightFavored ? rightWay : leftWay;
+
+                    
+                    float angleDifference = Quaternion.Angle(transform.rotation, TargetChiled.rotation);
+                   
+
+                    
+                    
+                    if (angleDifference > 89)
+                    {
+
+                       float objectRotation = transform.rotation.eulerAngles.y;
+
+                       
+
+
+                        if (TargetChiled.position.z < entrance.position.z && objectRotation < 1 && objectRotation > -1) 
+                            {
+                            if (TargetChiled == rightWay) { TargetChiled = leftWay; } else { TargetChiled = rightWay; }
+                             
+                            }
+                              
+                              
+                            else if (TargetChiled.position.x < entrance.position.x && objectRotation < 91 && objectRotation > 89)
+                            {
+                            if (TargetChiled == rightWay) { TargetChiled = leftWay; } else { TargetChiled = rightWay; }
+
+                            }
+                                
+                            else if (TargetChiled.position.z > entrance.position.z && objectRotation  < 181 && objectRotation > 179)
+                            {
+                            if (TargetChiled == rightWay) { TargetChiled = leftWay; } else { TargetChiled = rightWay; }
+                           
+                            }
+                          
+                            else if (TargetChiled.position.x > entrance.position.x && objectRotation < 271 && objectRotation > 269)
+                            {
+                            if (TargetChiled == rightWay) { TargetChiled = leftWay; } else { TargetChiled = rightWay; }
+
+                            }
+
+
+
+                        else
+                        {
+                                TargetChiled = entrance;
+                            }
+
+                        
+                        
+                    }
+                    
+                    Vector3 directionToFarthestChild = TargetChiled.position - transform.position;
+
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToFarthestChild);
+                    targetRotation.eulerAngles = new Vector3(0f, Mathf.Round(targetRotation.eulerAngles.y / 90) * 90, 0f);
+
+
+                    while (transform.rotation != targetRotation)
+                    {
+                        isTurning = true;
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+                        yield return null;
+                    }
+
+                    isTurning = false;
+
+                    // Move the car forward
+                    Vector3 targetPosition = transform.position + transform.forward;
+                    while (transform.position != targetPosition)
+                    {
+                        isMoving = true;
+                        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                        yield return null;
+                    }
+
+                    isMoving = false;
+
+                    // Check if the car has moved off the structure before allowing it to turn again
+                    if (lastPosition != transform.position)
+                    {
+                        isTurning = false;
+                        lastPosition = transform.position;
+
+                        // Clear the roadChildren list when the car leaves
+                        roadChildren.Clear();
+                    }
+
+                }
+
                 else if (structureID == 0)
                 {
                     

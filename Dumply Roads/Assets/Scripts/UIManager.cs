@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
         int structureCount = BuildingManager.Instance.GetAvailableCapacity(structureId,builldLimt);
         NumText.text = "You Have: " + structureCount.ToString();
 
-        Debug.Log("Button with index " + structureIndex  +" Button with ID " + StructureManager.currentStructureId  + " you have "+ builldLimt +" buildes" + " was clicked." );
+       // Debug.Log("Button with index " + structureIndex  +" Button with ID " + StructureManager.currentStructureId  + " you have "+ builldLimt +" buildes" + " was clicked." );
         _Grid.distroyMode = false;
     }
     public void UpdateNumText(int structureIndex, int structureId, int buildingLimit)
@@ -98,7 +98,7 @@ public class UIManager : MonoBehaviour
         if (CarMovement.GameStarted == false)
         {
             _Grid.distroyMode = !_Grid.distroyMode;
-            Debug.Log("is " + _Grid.distroyMode);
+            
 
         }
 

@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
         foreach (GameObject spawnPoint in spawnPoints)
         {
             // Get the spawn position and rotation of the spawn point
-            Vector3 spawnPosition = spawnPoint.transform.position;
+            Vector3 spawnPosition = spawnPoint.transform.position + new Vector3(0,0.1f,0);
             _Grid grid =spawnPoint.GetComponent<_Grid>();
             
             Quaternion spawnRotation = Quaternion.Euler(0f, Mathf.Round(spawnPoint.transform.rotation.eulerAngles.y / 90) * 90, 0f);
