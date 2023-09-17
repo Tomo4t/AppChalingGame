@@ -2,14 +2,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public GameObject buttonPrefab;
     public Transform buttonParent;
-    public Button distroyModeButten, startButten;
+    public Button distroyModeButten, startButten, PussButten, resumButten, restretButten, HomeButten;
     public static UIManager Instance;
+    public Sprite retryButten;
+    public GameObject pussPnell, winPanel;
 
+    public static string currentSceneName;
     private void Awake()
     {
         Instance = this;
@@ -17,11 +20,21 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        
-        distroyModeButten.GetComponent<Button>().onClick.AddListener(() => dystroymode());
         AssinButtens();
+
+        currentSceneName = SceneManager.GetActiveScene().name;
+
+        distroyModeButten.GetComponent<Button>().onClick.AddListener(() => dystroymode());
+
         startButten.GetComponent<Button>().onClick.AddListener(() => startGame());
 
+        PussButten.GetComponent<Button>().onClick.AddListener(() => stopGame());
+
+        resumButten.GetComponent<Button>().onClick.AddListener(() => resumeLevel());
+
+        restretButten.GetComponent<Button>().onClick.AddListener(() => ResetLevel());
+
+        HomeButten.GetComponent<Button>().onClick.AddListener(() => goHome());
     }
 
 
@@ -90,7 +103,42 @@ public class UIManager : MonoBehaviour
     }
     private void startGame()
     {
+        
         CarMovement.GameStarted = true;
+        startButten.GetComponent<Button>().image.sprite = retryButten;
+
+        startButten.GetComponent<Button>().onClick.AddListener(() => ResetLevel());
+    }
+    private void stopGame() 
+    {
+       
+        Time.timeScale = 0;
+        LevelManager.gameispossed = true;
+        PussButten.gameObject.SetActive(false);
+        distroyModeButten.gameObject.SetActive(false);
+        startButten.gameObject.SetActive(false);
+        pussPnell.SetActive(true);
+    }
+    public void resumeLevel() 
+    { 
+        Time.timeScale = 1;
+        LevelManager.gameispossed = false;
+        pussPnell.SetActive(false );
+        PussButten.gameObject.SetActive(true);
+        distroyModeButten.gameObject.SetActive(true);
+        startButten.gameObject.SetActive(true);
+    }
+
+    public void ResetLevel()
+    {
+        CarMovement.GameStarted= false;
+        Time.timeScale= 1;
+        SceneManager.LoadScene(currentSceneName);
+    }
+    public void goHome()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Menu");
     }
 
     private void dystroymode()
@@ -102,5 +150,14 @@ public class UIManager : MonoBehaviour
 
         }
 
+    }
+    public void activeWinScrean(int stars)
+    {
+        buttonParent.gameObject.SetActive(false);
+        distroyModeButten.gameObject.SetActive(false);
+        startButten.gameObject.SetActive(false);
+        PussButten.gameObject.SetActive(false);
+        winPanel.SetActive(true);
+        Debug.Log(stars);
     }
 }

@@ -16,4 +16,4 @@ MonoBehaviour:
   structureName: Carved Road
   previewImage: {fileID: 0}
   Id: 1
-  buildingLimit: 0
+  buildingLimit: 3

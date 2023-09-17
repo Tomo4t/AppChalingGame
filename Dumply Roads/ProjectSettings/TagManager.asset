@@ -5,8 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bordaer
-  - SpawnPoint
   - Car
+  - UniversoalWin
+  - DontWait
+  - SpownPointBlue
+  - SpawnPointRed
   layers:
   - Default
   - TransparentFX
@@ -17,8 +20,8 @@ TagManager:
   - Strucsher
   - Car
   - Road
-  - 
-  - 
+  - Level
+  - Poss
   - 
   - 
   - 

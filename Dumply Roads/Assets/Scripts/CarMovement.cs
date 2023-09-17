@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.ComponentModel;
 
 public class CarMovement : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class CarMovement : MonoBehaviour
     public LayerMask IgnorlayerMask;
     public float WaiteBeforeMoving = 1f;
 
-    public bool isRightFavored;
+    public bool isRightFavored, dontWaitForAll = false;
 
     private bool isMoving = false;
     private bool isTurning = false;
@@ -22,7 +22,9 @@ public class CarMovement : MonoBehaviour
     private Rigidbody rb;
     private MeshCollider col;
 
-    private int x = 0;
+
+    private bool carIsSafe = false;
+    private int x = 0, y = 0, z = 0;
     private Vector3 lastPosition; 
 
     private void Start()
@@ -34,6 +36,7 @@ public class CarMovement : MonoBehaviour
     private void FixedUpdate()
     {
         
+
         if (GameStarted)
         {
             if (!isMoving && !isTurning && !isDead)
@@ -42,9 +45,24 @@ public class CarMovement : MonoBehaviour
                 StartCoroutine(MoveAndRotate());
 
             }
+            if (LevelManager.AllisSafed)
+            {
+                if (z == 0)
+                {
+                    z = 1;
+                    isMoving = true;
+                }
+            }
+            if (carIsSafe)
+            {
+                if (y == 0)
+                {
+                    y = 1;
+                    LevelManager.SafedCares += 1;
+                }
+            }
 
-
-                if (isDead)
+                if (isDead && carIsSafe == false)
             {
                 if (x == 0)
                 {
@@ -298,7 +316,7 @@ public class CarMovement : MonoBehaviour
                 else if (structureID == 0)
                 {
                     
-                    if (isMoving == false)
+                    if (isMoving == false )
                     {
                         
                         Vector3 targetPosition = transform.position + transform.forward;
@@ -311,16 +329,31 @@ public class CarMovement : MonoBehaviour
                             {
                                 targetPosition = transform.position;
                             }
-                            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                            if (carIsSafe == false || LevelManager.AllisSafed || dontWaitForAll)
+                            {
+                                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                            }
+                            
                             yield return null;
                         }
                         isMoving = true;
                     }
-                    if (lastPosition == transform.position)
+                   
+                    if (!hit.collider.CompareTag("DontWait") && !hit.collider.CompareTag("UniversoalWin") && !hit.collider.CompareTag("SpawnPointRed") && !hit.collider.CompareTag("SpownPointBlue"))
                     {
                         yield return new WaitForSeconds(WaiteBeforeMoving);
+                    }
+
+                    if (hit.collider.CompareTag("UniversoalWin"))
+                    {
+                        carIsSafe = true;
+
+                    }
+                    if (lastPosition == transform.position)
+                    {
                         isMoving = false;
                     }
+                    
                    
                 }
             }

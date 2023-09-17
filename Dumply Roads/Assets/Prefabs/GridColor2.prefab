@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.8113208, g: 0.8083691, b: 0.8067284, a: 1}
+  m_Color: {r: 0.6415094, g: 0.47588852, b: 0.32922745, a: 0.65882355}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -102,7 +102,10 @@ MonoBehaviour:
   touchLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  hitColor: {r: 0.8058473, g: 0.8218824, b: 0.8584906, a: 1}
+  Posmask:
+    serializedVersion: 2
+    m_Bits: 1024
+  hitColor: {r: 0.5849056, g: 0.38877645, b: 0.25603414, a: 0.65882355}
   canBeEdited: 1
 --- !u!65 &5832169528582872575
 BoxCollider:

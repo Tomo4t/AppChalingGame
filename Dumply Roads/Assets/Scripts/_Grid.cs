@@ -42,7 +42,7 @@ public class _Grid : MonoBehaviour
 
     void Update()
     {
-        if (CarMovement.GameStarted == false && canBeEdited)
+        if (CarMovement.GameStarted == false && canBeEdited && LevelManager.gameispossed == false)
         {
             if (Input.touchCount > 0)
             {
