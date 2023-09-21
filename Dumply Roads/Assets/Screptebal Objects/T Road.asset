@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structurePrefab: {fileID: 40976092926627571, guid: 5bc6515393c42a042b7068be396705d6, type: 3}
   structureName: T-Road
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 21300000, guid: 4933d192db40a3446bfcd5e0d2b9262b, type: 3}
   Id: 2
   buildingLimit: 0

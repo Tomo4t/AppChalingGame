@@ -9,13 +9,16 @@ public class UIManager : MonoBehaviour
     public Transform buttonParent;
     public Button distroyModeButten, startButten, PussButten, resumButten, restretButten, HomeButten;
     public static UIManager Instance;
-    public Sprite retryButten;
+    public Sprite retryButten, DistroyIsActive, DistroyIsDeactive;
     public GameObject pussPnell, winPanel;
+
+    
 
     public static string currentSceneName;
     private void Awake()
     {
         Instance = this;
+      
     }
 
     private void Start()
@@ -35,6 +38,8 @@ public class UIManager : MonoBehaviour
         restretButten.GetComponent<Button>().onClick.AddListener(() => ResetLevel());
 
         HomeButten.GetComponent<Button>().onClick.AddListener(() => goHome());
+
+       
     }
 
 
@@ -84,12 +89,13 @@ public class UIManager : MonoBehaviour
     {
         StructureManager.currentStructureId = StructureManager.Instance.structureDataList[structureIndex].Id;
         StructureManager.currentStructureIndex = structureIndex;
-
+        
         int structureCount = BuildingManager.Instance.GetAvailableCapacity(structureId,builldLimt);
         NumText.text = "You Have: " + structureCount.ToString();
 
        // Debug.Log("Button with index " + structureIndex  +" Button with ID " + StructureManager.currentStructureId  + " you have "+ builldLimt +" buildes" + " was clicked." );
         _Grid.distroyMode = false;
+        distroyModeButten.image.sprite = DistroyIsDeactive;
     }
     public void UpdateNumText(int structureIndex, int structureId, int buildingLimit)
     {
@@ -145,9 +151,20 @@ public class UIManager : MonoBehaviour
     {
         if (CarMovement.GameStarted == false)
         {
+           
             _Grid.distroyMode = !_Grid.distroyMode;
             
+               
+                if (_Grid.distroyMode == true)
+                {
 
+                    distroyModeButten.image.sprite = DistroyIsActive;
+                }
+                if (_Grid.distroyMode == false)
+                {
+                   distroyModeButten.image.sprite = DistroyIsDeactive;
+                }
+               
         }
 
     }
