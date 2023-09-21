@@ -10,6 +10,13 @@ TagManager:
   - DontWait
   - SpownPointBlue
   - SpawnPointRed
+  - RedWin
+  - BlueWin
+  - PinkWin
+  - BlackWin
+  - Entrince
+  - SpownPointPink
+  - SpownPointBlack
   layers:
   - Default
   - TransparentFX

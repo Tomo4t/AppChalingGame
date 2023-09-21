@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+
 
 public class CarMovement : MonoBehaviour
 {
@@ -10,20 +10,21 @@ public class CarMovement : MonoBehaviour
     public float deadEndRange = 1f;
     public LayerMask IgnorlayerMask;
     public float WaiteBeforeMoving = 1f;
-
-    public bool isRightFavored, dontWaitForAll = false;
+    public GameObject frount;
+    public bool isRightFavored, dontWaitForAll = false, isBlue,isRed,isPink,isBlack;
 
     private bool isMoving = false;
     private bool isTurning = false;
 
     public static bool GameStarted;
     private bool isDead = false;
-    
+
+    private bool seenCar;
     private Rigidbody rb;
     private MeshCollider col;
 
 
-    private bool carIsSafe = false;
+    private bool carIsSafe = false, CarAtWrongExit;
     private int x = 0, y = 0, z = 0;
     private Vector3 lastPosition; 
 
@@ -35,11 +36,18 @@ public class CarMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        
+        RaycastHit hit;
+       
+        if (Physics.Raycast(transform.position, (frount.transform.position - transform.position).normalized, out hit, 0.8f, ~LayerMask.NameToLayer("Car")))
+        {
+            seenCar = true;
+            StartCoroutine(CarAhead());
+        }
 
         if (GameStarted)
-        {
-            if (!isMoving && !isTurning && !isDead)
+
+        { 
+            if (!isMoving && !isTurning && !isDead && seenCar == false && CarAtWrongExit == false)
             {
 
                 StartCoroutine(MoveAndRotate());
@@ -62,7 +70,7 @@ public class CarMovement : MonoBehaviour
                 }
             }
 
-                if (isDead && carIsSafe == false)
+                if ((isDead && carIsSafe == false) || CarAtWrongExit == true)
             {
                 if (x == 0)
                 {
@@ -83,7 +91,7 @@ public class CarMovement : MonoBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, ~IgnorlayerMask))
         {
-            Debug.DrawRay(transform.position, Vector3.down * deadEndRange, Color.green);
+           
 
             ID idScript = hit.collider.GetComponent<ID>();
 
@@ -339,16 +347,63 @@ public class CarMovement : MonoBehaviour
                         isMoving = true;
                     }
                    
-                    if (!hit.collider.CompareTag("DontWait") && !hit.collider.CompareTag("UniversoalWin") && !hit.collider.CompareTag("SpawnPointRed") && !hit.collider.CompareTag("SpownPointBlue"))
+                    if ((!hit.collider.CompareTag("DontWait") && !hit.collider.CompareTag("UniversoalWin") && !hit.collider.CompareTag("RedWin") && !hit.collider.CompareTag("BlueWin") && !hit.collider.CompareTag("PinkWin") && !hit.collider.CompareTag("BlackWin")) || CarAtWrongExit == true)
                     {
                         yield return new WaitForSeconds(WaiteBeforeMoving);
                     }
+
+
+
+                    if (hit.collider.CompareTag("Entrince"))
+                    {
+                        CarAtWrongExit = true;
+                    }
+
 
                     if (hit.collider.CompareTag("UniversoalWin"))
                     {
                         carIsSafe = true;
 
                     }
+
+                    if (isRed && hit.collider.CompareTag("RedWin"))
+                    {
+                        carIsSafe = true;
+                    }
+                    else if (isRed &&( hit.collider.CompareTag("BlueWin") || hit.collider.CompareTag("PinkWin") || hit.collider.CompareTag("BlackWin")))
+                    {
+                        CarAtWrongExit = true;
+                    }
+
+                    if (isBlue && hit.collider.CompareTag("BlueWin"))
+                    {
+                        carIsSafe = true;
+                    }
+                    else if (isBlue && (hit.collider.CompareTag("RedWin") || hit.collider.CompareTag("PinkWin") || hit.collider.CompareTag("BlackWin")))
+                    {
+                        CarAtWrongExit = true;
+                    }
+
+                    if (isPink && hit.collider.CompareTag("PinkWin"))
+                    {
+                        carIsSafe = true;
+                    }
+                    else if (isPink && (hit.collider.CompareTag("BlueWin") || hit.collider.CompareTag("RedWin") || hit.collider.CompareTag("BlackWin")))
+                    {
+                        CarAtWrongExit = true;
+                    }
+
+                    if (isBlack && hit.collider.CompareTag("BlackWin"))
+                    {
+                        carIsSafe = true;
+                    }
+                    else if (isBlack && (hit.collider.CompareTag("BlueWin") || hit.collider.CompareTag("PinkWin") || hit.collider.CompareTag("RedWin")))
+                    {
+                        CarAtWrongExit = true;
+                    }
+
+
+
                     if (lastPosition == transform.position)
                     {
                         isMoving = false;
@@ -370,7 +425,13 @@ public class CarMovement : MonoBehaviour
 
 
     }
-   
+
+    private IEnumerator CarAhead()
+    {
+        yield return new WaitForSeconds(0.7f);
+        seenCar = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Bordaer"))

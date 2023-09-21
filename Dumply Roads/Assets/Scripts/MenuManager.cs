@@ -13,27 +13,27 @@ public class MenuManager : MonoBehaviour
     private Vector2 touchStartPos;
     public LayerMask touchLayerMask;
     private bool isSwitshing = false;
+
    
         private void Awake()
     {
-        
-
         m_Camera = Camera.main;
-        levelPositions = new List<Vector3>();
-
-        foreach (GameObject level in Levels)
-        {
-            if (level != null)
-            {
-                levelPositions.Add(level.transform.position);
-                level.AddComponent<BoxCollider>();
-            }
-        }
-
     }
+   
     
     private void Update()
     {
+       
+            levelPositions = new List<Vector3>();
+
+            foreach (GameObject level in Levels)
+            {
+                if (level != null)
+                {
+                    levelPositions.Add(level.transform.position);
+                    level.AddComponent<BoxCollider>();
+                }
+            }
         if (isSwitshing == false)
         {
             if (Input.touchCount > 0 && isSwitshing == false)

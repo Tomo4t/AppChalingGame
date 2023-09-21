@@ -8,6 +8,7 @@ public class _Grid : MonoBehaviour
 
     public bool canBeEdited = true;
 
+    
     private GameObject currentStructurePrefab;
     private int currentStructureId = -1;
     private int destroyedStructureIndex = -1;

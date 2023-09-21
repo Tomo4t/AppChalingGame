@@ -11,6 +11,7 @@ public class AspectRatioHandler : MonoBehaviour
         UpdateAspectRatio();
     }
 
+
     private void UpdateAspectRatio()
     {
         float currentAspectRatio = (float)Screen.width / Screen.height;
