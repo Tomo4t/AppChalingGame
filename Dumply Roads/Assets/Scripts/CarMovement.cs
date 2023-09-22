@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.AdaptivePerformance;
 
 public class CarMovement : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class CarMovement : MonoBehaviour
     private bool isMoving = false;
     private bool isTurning = false;
 
-    public static bool GameStarted;
+    
     private bool isDead = false;
 
     private bool seenCar;
@@ -44,7 +44,7 @@ public class CarMovement : MonoBehaviour
             StartCoroutine(CarAhead());
         }
 
-        if (GameStarted)
+        if (LevelManager.GameStarted)
 
         { 
             if (!isMoving && !isTurning && !isDead && seenCar == false && CarAtWrongExit == false)
@@ -347,7 +347,7 @@ public class CarMovement : MonoBehaviour
                         isMoving = true;
                     }
                    
-                    if ((!hit.collider.CompareTag("DontWait") && !hit.collider.CompareTag("UniversoalWin") && !hit.collider.CompareTag("RedWin") && !hit.collider.CompareTag("BlueWin") && !hit.collider.CompareTag("PinkWin") && !hit.collider.CompareTag("BlackWin")) || CarAtWrongExit == true)
+                    if ((!hit.collider.CompareTag("DontWait") && !hit.collider.CompareTag("SpawnPointRed") && !hit.collider.CompareTag("SpownPointBlue") && !hit.collider.CompareTag("SpownPointPink") && !hit.collider.CompareTag("SpownPointBlack") && !hit.collider.CompareTag("UniversoalWin") && !hit.collider.CompareTag("RedWin") && !hit.collider.CompareTag("BlueWin") && !hit.collider.CompareTag("PinkWin") && !hit.collider.CompareTag("BlackWin")) || CarAtWrongExit == true)
                     {
                         yield return new WaitForSeconds(WaiteBeforeMoving);
                     }
@@ -428,12 +428,19 @@ public class CarMovement : MonoBehaviour
 
     private IEnumerator CarAhead()
     {
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1);
         seenCar = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Star"))
+        {
+            other.GetComponent<MeshCollider>().enabled = false;
+            LevelManager.GoatStar = true;
+            Destroy(other.gameObject);
+
+        }
         if (other.gameObject.CompareTag("Bordaer"))
         {
             

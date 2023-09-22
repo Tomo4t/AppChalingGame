@@ -12,13 +12,16 @@ public class UIManager : MonoBehaviour
     public Sprite retryButten, DistroyIsActive, DistroyIsDeactive;
     public GameObject pussPnell, winPanel;
 
-    
+    public Image star;
+
+
 
     public static string currentSceneName;
     private void Awake()
     {
         Instance = this;
       
+
     }
 
     private void Start()
@@ -110,7 +113,7 @@ public class UIManager : MonoBehaviour
     private void startGame()
     {
         
-        CarMovement.GameStarted = true;
+        LevelManager.GameStarted = true;
         startButten.GetComponent<Button>().image.sprite = retryButten;
 
         startButten.GetComponent<Button>().onClick.AddListener(() => ResetLevel());
@@ -135,21 +138,28 @@ public class UIManager : MonoBehaviour
         startButten.gameObject.SetActive(true);
     }
 
+    public void nextLevel()
+    {
+        LevelManager.GameStarted = false;
+        SceneManager.LoadScene("Level" + (MenuManager.currentLevelIndex + 2));
+        MenuManager.currentLevelIndex++;
+    }
     public void ResetLevel()
     {
-        CarMovement.GameStarted= false;
+        LevelManager.GameStarted= false;
         Time.timeScale= 1;
         SceneManager.LoadScene(currentSceneName);
     }
     public void goHome()
     {
+        LevelManager.GameStarted = false;
         Time.timeScale = 1;
         SceneManager.LoadScene("Menu");
     }
 
     private void dystroymode()
     {
-        if (CarMovement.GameStarted == false)
+        if (LevelManager.GameStarted == false)
         {
            
             _Grid.distroyMode = !_Grid.distroyMode;
@@ -168,13 +178,13 @@ public class UIManager : MonoBehaviour
         }
 
     }
-    public void activeWinScrean(int stars)
+    public void activeWinScrean()
     {
         buttonParent.gameObject.SetActive(false);
         distroyModeButten.gameObject.SetActive(false);
         startButten.gameObject.SetActive(false);
         PussButten.gameObject.SetActive(false);
         winPanel.SetActive(true);
-        Debug.Log(stars);
+        
     }
 }
