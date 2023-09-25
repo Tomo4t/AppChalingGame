@@ -13,6 +13,11 @@ public class CarMovement : MonoBehaviour
     public GameObject frount;
     public bool isRightFavored, dontWaitForAll = false, isBlue,isRed,isPink,isBlack;
 
+
+    public AudioClip Lose, Clash, Move;
+    public AudioSource MainSource, OffSource;
+
+
     private bool isMoving = false;
     private bool isTurning = false;
 
@@ -38,15 +43,22 @@ public class CarMovement : MonoBehaviour
     {
         RaycastHit hit;
        
-        if (Physics.Raycast(transform.position, (frount.transform.position - transform.position).normalized, out hit, 0.8f, ~LayerMask.NameToLayer("Car")))
+        if (Physics.Raycast(transform.position, (frount.transform.position - transform.position).normalized, out hit, 0.8f, ~LayerMask.NameToLayer("Car")) && seenCar == false)
         {
             seenCar = true;
             StartCoroutine(CarAhead());
         }
+        else
+       
 
         if (LevelManager.GameStarted)
 
         { 
+
+            OffSource.enabled = false;
+            MainSource.enabled = true;
+
+            
             if (!isMoving && !isTurning && !isDead && seenCar == false && CarAtWrongExit == false)
             {
 
@@ -59,6 +71,7 @@ public class CarMovement : MonoBehaviour
                 {
                     z = 1;
                     isMoving = true;
+                    OffSource.enabled = false;
                 }
             }
             if (carIsSafe)
@@ -67,6 +80,8 @@ public class CarMovement : MonoBehaviour
                 {
                     y = 1;
                     LevelManager.SafedCares += 1;
+                    MainSource.clip = null;
+                    OffSource.enabled = true;
                 }
             }
 
@@ -321,7 +336,7 @@ public class CarMovement : MonoBehaviour
 
                 }
 
-                else if (structureID == 0)
+                else if (structureID == 0 || structureID == 3)
                 {
                     
                     if (isMoving == false )
@@ -416,9 +431,11 @@ public class CarMovement : MonoBehaviour
 
 
         }
-        else
+        else if (isDead == false && !carIsSafe)
         {
-          
+            MainSource.loop = false;
+            MainSource.clip = Lose;
+            MainSource.Play();
            isDead = true;
             
         }
@@ -428,7 +445,8 @@ public class CarMovement : MonoBehaviour
 
     private IEnumerator CarAhead()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(MoveAndRotate());
         seenCar = false;
     }
 
@@ -437,26 +455,21 @@ public class CarMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Star"))
         {
             other.GetComponent<MeshCollider>().enabled = false;
+            other.GetComponent<MeshRenderer>().enabled = false;
+            other.GetComponent<AudioSource>().enabled = true;
             LevelManager.GoatStar = true;
-            Destroy(other.gameObject);
+            Destroy(other.gameObject, 2f);
 
         }
-        if (other.gameObject.CompareTag("Bordaer"))
+        
+        if (other.gameObject.CompareTag("Car") || other.gameObject.CompareTag("Bordaer"))
         {
-            
+            rb.isKinematic = false;
+            MainSource.loop = false;
+            MainSource.clip = Clash;
+            MainSource.Play();
             col.isTrigger = false;
-            rb.velocity = other.transform.position - transform.forward;
-            isDead = true;
-            
-           
-
-
-        }
-        if (other.gameObject.CompareTag("Car"))
-        {
-            
-            col.isTrigger = false;
-            rb.velocity = other.transform.position - transform.forward;
+            rb.velocity = (other.transform.position - transform.forward);
             isDead = true;
             
         }

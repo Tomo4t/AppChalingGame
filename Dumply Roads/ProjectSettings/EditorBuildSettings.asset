@@ -23,6 +23,30 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Level5.unity
     guid: 677495dfdb152d347a55fb1f75e8f0bf
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level6.unity
+    guid: 5d609ebd75d700c468799bb8934ca7de
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level7.unity
+    guid: 71dd3868c45a2244a85f3648b2a7a098
+  - enabled: 1
+    path: Assets/Scenes/Start.unity
+    guid: 84f14850cddb17442939942b8d83ac00
+  - enabled: 1
+    path: Assets/QGame/Assets/Scenes/mean-scene/M1.unity
+    guid: 4ee8a462f4f053c43865ac24beb4db93
+  - enabled: 1
+    path: Assets/QGame/Assets/Scenes/mean-scene/M2.unity
+    guid: 02edf045e55e96f4fb1a170aae602c04
+  - enabled: 1
+    path: Assets/QGame/Assets/Scenes/mean-scene/M3.unity
+    guid: 53ffa34c5da7a6a42a73ef3b0b4258fa
+  - enabled: 1
+    path: Assets/QGame/Assets/Scenes/mean-scene/M4.unity
+    guid: 772e36b91afb12b4e85e5fadf004cb81
+  - enabled: 1
+    path: Assets/QGame/Assets/Scenes/mean-scene/M5.unity
+    guid: f86b6981793e40640be43a77bbf10340
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 9628a71a6d7b11f45b5df4cb4bc25f54, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 23fc9c57c87cf3f468a0d131a048511f, type: 2}

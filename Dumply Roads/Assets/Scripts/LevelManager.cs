@@ -6,7 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     public GameObject RedCar, BlueCar, PinkCar,BlackCar; 
     public string SpawnPointRed = "SpawnPointRed",SpownPointBlue = "SpownPointBlue", SpownPointPink = "SpownPointPink", SpownPointBlack = "SpownPointBlack";
-    public Sprite WinStar;
+    public Sprite WinStar, HappyPanel;
 
 
     private int CarNededToWin; 
@@ -112,12 +112,17 @@ public class LevelManager : MonoBehaviour
                 x = 0;
                 if (GoatStar == true)
                 {
+                    UIManager.Instance.WinPanelBass.sprite = HappyPanel;
                     UIManager.Instance.star.sprite = WinStar;
                     PlayerPrefs.SetInt("Level" + levelIndex + "Star",2);
                 }
                 else
                 {
-                    PlayerPrefs.SetInt("Level" + levelIndex + "Star", 1);
+                    if (PlayerPrefs.GetInt("Level" + levelIndex + "Star") != 2)
+                    {
+                        PlayerPrefs.SetInt("Level" + levelIndex + "Star", 1);
+                    }
+                    
                 }
                 
                 UIManager.Instance.activeWinScrean();

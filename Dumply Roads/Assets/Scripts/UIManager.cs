@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
+
 public class UIManager : MonoBehaviour
 {
     public GameObject buttonPrefab;
@@ -12,9 +14,10 @@ public class UIManager : MonoBehaviour
     public Sprite retryButten, DistroyIsActive, DistroyIsDeactive;
     public GameObject pussPnell, winPanel;
 
-    public Image star;
-
-
+    public Image star,WinPanelBass;
+    public AudioSource SFX;
+    public AudioClip Click;
+    public string URL = "";
 
     public static string currentSceneName;
     private void Awake()
@@ -45,7 +48,10 @@ public class UIManager : MonoBehaviour
        
     }
 
-
+    public void playClickSound()
+    {
+        SFX.Play();
+    }
     public void AssinButtens()
     {
         for (int i = 0; i < StructureManager.Instance.structureDataList.Count; i++)
@@ -140,9 +146,8 @@ public class UIManager : MonoBehaviour
 
     public void nextLevel()
     {
-        LevelManager.GameStarted = false;
-        SceneManager.LoadScene("Level" + (MenuManager.currentLevelIndex + 2));
-        MenuManager.currentLevelIndex++;
+
+        TransitionManger.instance.loadlevel(false,"Jk");
     }
     public void ResetLevel()
     {
@@ -176,6 +181,11 @@ public class UIManager : MonoBehaviour
                 }
                
         }
+
+    }
+    public void OpenLink()
+    {
+        Application.OpenURL(URL);
 
     }
     public void activeWinScrean()

@@ -15,24 +15,27 @@ public class MenuManager : MonoBehaviour
     [SerializeField] public List<GameObject> Levels;
     [SerializeField] public static List<Vector3> levelPositions;
     [SerializeField] public float cameraMoveSpeed = 2.0f;
-    [SerializeField] private Vector2 touchStartPos;
+     
     [SerializeField] public LayerMask touchLayerMask;
 
-    private static Vector3 orginalpos;
     
+    private static Vector3 orginalpos;
+    private Vector2 touchStartPos;
 
     private bool isSwitshing = false;
-    public GameObject settings;
 
+    public static bool allowTouch = true;
     public static int currentLevelIndex = 0;
     public static int unlocedLevels = 1;
-   
+  
+
+
         private void Awake()
     {
-
+        allowTouch = true;
         unlocedLevels = PlayerPrefs.GetInt("levelRetched");
 
-        
+       
 
         if (PlayerPrefs.GetInt("levelRetched") == 0 )
         {
@@ -53,7 +56,7 @@ public class MenuManager : MonoBehaviour
         
     }
 
-    [System.Obsolete]
+   
     private void Update()
     {
         
@@ -61,6 +64,7 @@ public class MenuManager : MonoBehaviour
         
         levelPositions = new List<Vector3>();
 
+        //Chat GPT UNLockLevels
         foreach (GameObject level in Levels)
         {
             if (level != null)
@@ -137,8 +141,8 @@ public class MenuManager : MonoBehaviour
         }
 
         
-
-        if (isSwitshing == false)
+        //Switch Betwen Levels
+        if (isSwitshing == false && allowTouch)
         {
             if (Input.touchCount > 0 && isSwitshing == false)
             {
@@ -151,8 +155,7 @@ public class MenuManager : MonoBehaviour
 
                     RaycastHit hit;
                     Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, touchLayerMask)
-                        && settings.active == false)
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, touchLayerMask))
                     {
                         LoadLevel("Level" + (currentLevelIndex + 1));
                     }
@@ -231,8 +234,8 @@ public class MenuManager : MonoBehaviour
     public void LoadLevel(string levelName)
     {
         isSwitshing=true;
-        SceneManager.LoadScene(levelName);
+        TransitionManger.instance.loadlevel(true, levelName);
     }
 
-   
+    
 }
