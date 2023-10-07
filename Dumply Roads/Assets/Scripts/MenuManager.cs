@@ -1,10 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -157,7 +153,8 @@ public class MenuManager : MonoBehaviour
                     Ray ray = Camera.main.ScreenPointToRay(touch.position);
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, touchLayerMask))
                     {
-                        LoadLevel("Level" + (currentLevelIndex + 1));
+                        TransitionManger.instance.loadlevel(true,"Level" + (currentLevelIndex + 1));
+                       
                     }
                 }
 
@@ -231,11 +228,6 @@ public class MenuManager : MonoBehaviour
     }
     
 
-    public void LoadLevel(string levelName)
-    {
-        isSwitshing=true;
-        TransitionManger.instance.loadlevel(true, levelName);
-    }
-
+  
     
 }

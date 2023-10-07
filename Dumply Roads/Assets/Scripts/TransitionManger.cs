@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -37,7 +36,15 @@ public class TransitionManger : MonoBehaviour
         yield return new WaitForSeconds(1);
         LevelManager.GameStarted = false;
         MenuManager.currentLevelIndex++;
-        SceneManager.LoadScene("Level" + (SceneManager.GetActiveScene().buildIndex + 1));
+        if (SceneManager.GetSceneByName("Level" + (SceneManager.GetActiveScene().buildIndex + 1)) != null)
+        {
+            SceneManager.LoadScene("Level" + (SceneManager.GetActiveScene().buildIndex + 1));
+        }
+        else
+        {
+            SceneManager.LoadScene("Start");
+        }
+       
         
         SoundManager.instance.UnMuteAll(1);
         transitionAnim.SetTrigger("End");

@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using Unity.VisualScripting;
+
 
 public class Settings : MonoBehaviour
 {
@@ -98,8 +98,11 @@ public class Settings : MonoBehaviour
     public IEnumerator alowtoch()
     {
         yield return new WaitForSeconds(0.5f);
-
-        MenuManager.allowTouch = true;
+        if (setingsActive == false)
+        {
+            MenuManager.allowTouch = true;
+        }
+       
     }
 
 }
